@@ -7,7 +7,12 @@ var collections = ['games'];
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/rps');
 
-var Game = mongoose.model('Game', { id: String });
+var Game = mongoose.model('Game', {
+  id: String,
+  players: [{
+    id: String
+  }]
+});
  
 app.set('views', __dirname + '/tpl');
 app.set('view engine', "jade");
@@ -39,8 +44,15 @@ app.get('/games', function(req, res){
 
 app.get('/games/:id', function(req, res) {
   Game.find({ id: req.params.id }, function (err, games) {
+    var game = games[0];
+    var pid = req.cookies.pid;
+    console.log('Adding player to game');
+    game.players.push({
+      id: pid
+    });
+    game.save();
     res.render('game', {
-      game: games[0]
+      game: game
     });
   });
 });
