@@ -14,7 +14,6 @@ app.get("/", function(req, res){
   if (!req.cookies.pid) {
     res.cookie('pid', uuid.v4());
   }
-  console.log(uuid.v4())
   res.render('index');
 });
 // app.listen(port);
