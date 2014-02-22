@@ -1,0 +1,6 @@
+{
+  "name": "Rock Paper Scissors RESTRICTED",
+  "dependencies": {
+    "socket.io": "~0.9.16"
+  }
+}
