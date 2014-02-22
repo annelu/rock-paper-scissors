@@ -13,18 +13,23 @@ var Game = mongoose.model('Game', {
     id: String
   }]
 });
- 
+
+var pid = function(req, res, next) {
+  if (!req.cookies.pid) {
+    res.cookie('pid', uuid.v4());
+  }
+  next();
+};
+
 app.set('views', __dirname + '/tpl');
 app.set('view engine', "jade");
 app.engine('jade', require('jade').__express);
 app.use(express.static(__dirname + '/public'));
 app.use(express.cookieParser());
+app.use(pid);
 
 // Routes
 app.get("/", function(req, res){
-  if (!req.cookies.pid) {
-    res.cookie('pid', uuid.v4());
-  }
   res.render('index');
 });
 
