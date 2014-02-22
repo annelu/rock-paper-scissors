@@ -2,3 +2,6 @@ html
   head
   body
     h1 Game #{game.id}
+    ul
+      each player in game.players
+        li=player.id
