@@ -78,8 +78,15 @@ var io = require('socket.io').listen(app.listen(port));
 console.log("Listening on port " + port);
 
 io.sockets.on('connection', function (socket) {
-    socket.emit('message', { message: 'welcome to the chat' });
+    socket.emit('message', { message: 'welcome to the game' });
     socket.on('send', function (data) {
+      console.log('woohooooo');
         io.sockets.emit('message', data);
+    });
+    socket.on('player:join', function(data) {
+      console.log('PLAYER HAS JOINED GAME ' + data.gameId);
+      io.sockets.emit('player:join', {
+        pid: data.pid
+      });
     });
 });
