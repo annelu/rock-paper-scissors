@@ -1,8 +1,11 @@
 html
   head
+    title Game #{game.id}
     script(src='/socket.io/socket.io.js')
     script(src='/game.js')
   body(data-game-id=game.id)
+    nav
+      a(href='/games') New Game
     h1 Game #{game.id}
     ul
       each player in game.players
