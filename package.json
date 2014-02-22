@@ -1,9 +1,8 @@
 {
-  "name": "Rock Paper Scissors RESTRICTED",
-  "version": "0.0.0",
   "dependencies": {
     "socket.io": "~0.9.16",
     "express": "~3.4.8",
-  },
-  "author": "cool ppl onli plz"
+    "jade": "~1.1.5",
+    "node-uuid": "~1.4.1"
+  }
 }

@@ -1,16 +1,20 @@
-var express = require("express");
+var express = require('express');
 var app = express();
 var port = 3700;
+var uuid = require('node-uuid');
  
 app.set('views', __dirname + '/tpl');
 app.set('view engine', "jade");
 app.engine('jade', require('jade').__express);
 app.use(express.static(__dirname + '/public'));
-
+app.use(express.cookieParser());
 
 // Routes
 app.get("/", function(req, res){
-    res.render("page");
+  if (!req.cookies.pid) {
+    res.cookie('pid', uuid.v4());
+  }
+  res.render('index');
 });
 // app.listen(port);
 var io = require('socket.io').listen(app.listen(port));
