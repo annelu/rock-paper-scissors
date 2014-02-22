@@ -46,14 +46,24 @@ app.get('/games/:id', function(req, res) {
   Game.find({ id: req.params.id }, function (err, games) {
     var game = games[0];
     var pid = req.cookies.pid;
+    var renderGame = function(){
+      res.render('game', {
+        game: game
+      });
+    };
+    for (var i = 0; i < game.players.length; i++) {
+      if (game.players[i].id === pid) {
+        console.log('Player already exists in this game');
+        renderGame();
+        return;
+      }
+    }
     console.log('Adding player to game');
     game.players.push({
       id: pid
     });
     game.save();
-    res.render('game', {
-      game: game
-    });
+    renderGame();
   });
 });
 
