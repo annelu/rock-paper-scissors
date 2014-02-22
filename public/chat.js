@@ -3,7 +3,6 @@ window.onload = function() {
     var socket = io.connect('http://localhost:3700');
     var field = document.getElementById("field");
     var sendButton = document.getElementById("send");
-    console.log(sendButton);
     var content = document.getElementById("content");
     socket.on('message', function (data) {
         if(data.message) {

@@ -16,6 +16,10 @@ app.get("/", function(req, res){
   }
   res.render('index');
 });
+app.get('/games', function(req, res){
+  var gameId = uuid.v4().split('-');
+  res.redirect('/games/' + gameId[0]);
+});
 // app.listen(port);
 var io = require('socket.io').listen(app.listen(port));
 console.log("Listening on port " + port);
