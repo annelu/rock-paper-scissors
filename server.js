@@ -51,35 +51,51 @@ app.get('/games/:id', function(req, res) {
   Game.find({ id: req.params.id }, function (err, games) {
     var game = games[0];
     var pid = req.cookies.pid;
-    var renderGame = function(){
-      res.render('game', {
-        game: game
-      });
-    };
-    for (var i = 0; i < game.players.length; i++) {
-      if (game.players[i].id === pid) {
-        console.log('Player already exists in this game');
-        renderGame();
-        return;
-      }
-    }
-    console.log('Adding player to game');
-    game.players.push({
-      id: pid
+    res.render('game', {
+      game: game
     });
-    game.save();
-    renderGame();
   });
 });
 
 
-// app.listen(port);
 var io = require('socket.io').listen(app.listen(port));
 console.log("Listening on port " + port);
 
 io.sockets.on('connection', function (socket) {
-    socket.emit('message', { message: 'welcome to the chat' });
+    socket.emit('message', { message: 'welcome to the game' });
     socket.on('send', function (data) {
+      console.log('woohooooo');
         io.sockets.emit('message', data);
+    });
+    socket.on('player:connect', function(data) {
+      var gid = data.gameId;
+      socket.join(gid);
+      Game.find({ id: data.gameId }, function (err, games) {
+        var game = games[0];
+        var inGame = false;
+        for (var i = 0; i < game.players.length; i++) {
+          if (game.players[i].id === data.pid) {
+            console.log('found player ' + data.pid + ' in game');
+            inGame = true;
+            break;
+          }
+        }
+        if (!inGame) {
+          console.log('did not find player ' + data.pid + ' in game');
+          game.players.push({
+            id: data.pid
+          });
+          game.save();
+          socket.emit('player:join', {
+            pid: data.pid
+          });
+          socket.broadcast.to(gid).emit('player:join', {
+            pid: data.pid
+          });
+        }
+        socket.broadcast.to(gid).emit('player:connect', {
+          pid: data.pid
+        });
+      });
     });
 });
